@@ -13,8 +13,13 @@ const {getStatsData} = require('./lib/stats');
 const {getUsageData} = require('./lib/usage');
 const {getSetsData} = require('./lib/sets');
 
-app.use('/v1/', (req, res, next) => {
+app.use('/v1/', (req, _, next) => {
   console.log("Received request for " + req.url);
+  next();
+})
+
+app.use('/v1/', (_, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
   next();
 })
 
@@ -72,11 +77,15 @@ app.get("/v1/:time/:format/pokemon/:species/complete", (req, res, next) => {
 // Handle Errors
 app.use('/', (err, req, res, next) => {
   if (!err) {
-    res.status(404).send('Not found')
+    res.status(404).send('Endpoint not found')
   }
+  console.error(err);
   err = boom.boomify(err);
-  console.log(err);
   res.status(err.statusCode).send(err);
+  next();
 })
 
-app.listen(8080);
+app.listen(8080, (err) => {
+  if (err) console.log('An error occured');
+  else console.log('Listening on port 8080');
+});
