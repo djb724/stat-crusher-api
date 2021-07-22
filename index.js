@@ -79,9 +79,8 @@ app.use('/', (err, req, res, next) => {
   if (!err) {
     res.status(404).send('Endpoint not found')
   }
-  console.error(err);
-  err = boom.boomify(err);
-  res.status(err.statusCode).send(err);
+  console.error(err.stack);
+  res.status(500).send(err.stack);
   next();
 })
 
