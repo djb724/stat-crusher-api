@@ -12,17 +12,15 @@ const elos = [0, 1500, 1630, 1760];
 
 module.exports = express.Router()
   .use('', (req, res, next) => {
-    console.log(req.headers);
     if (req.headers['authorization'] === 'Fw73WhQKC31QB0GRv0th') {
       return next()
     }
     next(boom.forbidden());
   })
   .post('/update', (req, res, next) => {
-    console.log(req.body)
     const { time, format } = req.body;
-    if (!time) return boom.badRequest('Missing time parameter');
-    if (!format) return boom.badRequest('Missing format parameter');
+    if (!time) return next(boom.badRequest('Missing time parameter'));
+    if (!format) return next(boom.badRequest('Missing format parameter'));
 
     async.autoInject({
       current: (cb) => {
