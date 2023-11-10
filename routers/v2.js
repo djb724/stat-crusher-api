@@ -5,6 +5,11 @@ const cache = require('../lib/cache').getInstance();
 let router = express.Router();
 router.use('/admin', admin);
 
+router.use('', (_, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  next();
+});
+
 router.get('/:elo/usage', (req, res, next) => {
   const {time, format, elo} = req.params;
   cacheKey = `${elo}:usage`;
